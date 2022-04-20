@@ -1,0 +1,3 @@
+rootProject.name = 'fern-openapi-plugins'
+
+include 'openapi-importer'
