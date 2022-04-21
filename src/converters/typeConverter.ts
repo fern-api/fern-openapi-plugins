@@ -4,6 +4,7 @@ import {
 } from "@fern-api/syntax-analysis/lib/schemas";
 import { OpenAPIV3 } from "openapi-types";
 import _ from "lodash";
+import { UnionSchema } from "@fern-api/syntax-analysis/lib/schemas";
 
 export interface FernTypeConversionResult {
   typeDefinitions: Record<string, TypeDefinitionSchema>;
@@ -23,7 +24,20 @@ export function convertToFernType(
   if (_.isEmpty(schemaObject)) {
     conversionResult.typeDefinitions[typeName] = EMPTY_OBJECT_TYPE_DEFINITION;
   } else if (schemaObject.oneOf !== undefined) {
-    console.log("Skipping oneOf");
+    let unionTypeDefinition: UnionSchema = { union: {} };
+    schemaObject.oneOf.forEach((nestedUnionType) => {
+      if (isSchemaObject(nestedUnionType)) {
+        throw new Error(
+          "Don't support converting inlined oneOf types:" + typeName
+        );
+      } else {
+        let nestedUnionFernType =
+          getTypeNameFromReferenceObject(nestedUnionType);
+        unionTypeDefinition.union[_.lowerFirst(nestedUnionFernType)] =
+          nestedUnionFernType;
+      }
+    });
+    conversionResult.typeDefinitions[typeName] = unionTypeDefinition;
   } else if (schemaObject.enum !== undefined) {
     conversionResult.typeDefinitions[typeName] = {
       enum: schemaObject.enum.filter((value) => typeof value === "string"),

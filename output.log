@@ -1,12 +1,167 @@
 yarn run v1.22.18
 $ /Users/dsinghvi/Documents/fern-openapi-plugins/node_modules/.bin/ts-node ./src/app.ts
-Skipping oneOf
 errors: {}
 imports: {}
 ids: []
 types:
   ResourceList:
-    fields: {}
+    union:
+      account: Account
+      activityDefinition: ActivityDefinition
+      adverseEvent: AdverseEvent
+      allergyIntolerance: AllergyIntolerance
+      appointment: Appointment
+      appointmentResponse: AppointmentResponse
+      auditEvent: AuditEvent
+      basic: Basic
+      binary: Binary
+      biologicallyDerivedProduct: BiologicallyDerivedProduct
+      bodyStructure: BodyStructure
+      bundle: Bundle
+      capabilityStatement: CapabilityStatement
+      carePlan: CarePlan
+      careTeam: CareTeam
+      catalogEntry: CatalogEntry
+      chargeItem: ChargeItem
+      chargeItemDefinition: ChargeItemDefinition
+      claim: Claim
+      claimResponse: ClaimResponse
+      clinicalImpression: ClinicalImpression
+      codeSystem: CodeSystem
+      communication: Communication
+      communicationRequest: CommunicationRequest
+      compartmentDefinition: CompartmentDefinition
+      composition: Composition
+      conceptMap: ConceptMap
+      condition: Condition
+      consent: Consent
+      contract: Contract
+      coverage: Coverage
+      coverageEligibilityRequest: CoverageEligibilityRequest
+      coverageEligibilityResponse: CoverageEligibilityResponse
+      detectedIssue: DetectedIssue
+      device: Device
+      deviceDefinition: DeviceDefinition
+      deviceMetric: DeviceMetric
+      deviceRequest: DeviceRequest
+      deviceUseStatement: DeviceUseStatement
+      diagnosticReport: DiagnosticReport
+      documentManifest: DocumentManifest
+      documentReference: DocumentReference
+      effectEvidenceSynthesis: EffectEvidenceSynthesis
+      encounter: Encounter
+      endpoint: Endpoint
+      enrollmentRequest: EnrollmentRequest
+      enrollmentResponse: EnrollmentResponse
+      episodeOfCare: EpisodeOfCare
+      eventDefinition: EventDefinition
+      evidence: Evidence
+      evidenceVariable: EvidenceVariable
+      exampleScenario: ExampleScenario
+      explanationOfBenefit: ExplanationOfBenefit
+      familyMemberHistory: FamilyMemberHistory
+      flag: Flag
+      goal: Goal
+      graphDefinition: GraphDefinition
+      group: Group
+      guidanceResponse: GuidanceResponse
+      healthcareService: HealthcareService
+      imagingStudy: ImagingStudy
+      immunization: Immunization
+      immunizationEvaluation: ImmunizationEvaluation
+      immunizationRecommendation: ImmunizationRecommendation
+      implementationGuide: ImplementationGuide
+      insurancePlan: InsurancePlan
+      invoice: Invoice
+      library: Library
+      linkage: Linkage
+      list: List
+      location: Location
+      measure: Measure
+      measureReport: MeasureReport
+      media: Media
+      medication: Medication
+      medicationAdministration: MedicationAdministration
+      medicationDispense: MedicationDispense
+      medicationKnowledge: MedicationKnowledge
+      medicationRequest: MedicationRequest
+      medicationStatement: MedicationStatement
+      medicinalProduct: MedicinalProduct
+      medicinalProductAuthorization: MedicinalProductAuthorization
+      medicinalProductContraindication: MedicinalProductContraindication
+      medicinalProductIndication: MedicinalProductIndication
+      medicinalProductIngredient: MedicinalProductIngredient
+      medicinalProductInteraction: MedicinalProductInteraction
+      medicinalProductManufactured: MedicinalProductManufactured
+      medicinalProductPackaged: MedicinalProductPackaged
+      medicinalProductPharmaceutical: MedicinalProductPharmaceutical
+      medicinalProductUndesirableEffect: MedicinalProductUndesirableEffect
+      messageDefinition: MessageDefinition
+      messageHeader: MessageHeader
+      molecularSequence: MolecularSequence
+      namingSystem: NamingSystem
+      nutritionOrder: NutritionOrder
+      observation: Observation
+      observationDefinition: ObservationDefinition
+      operationDefinition: OperationDefinition
+      operationOutcome: OperationOutcome
+      organization: Organization
+      organizationAffiliation: OrganizationAffiliation
+      parameters: Parameters
+      patient: Patient
+      paymentNotice: PaymentNotice
+      paymentReconciliation: PaymentReconciliation
+      person: Person
+      planDefinition: PlanDefinition
+      practitioner: Practitioner
+      practitionerRole: PractitionerRole
+      procedure: Procedure
+      provenance: Provenance
+      questionnaire: Questionnaire
+      questionnaireResponse: QuestionnaireResponse
+      relatedPerson: RelatedPerson
+      requestGroup: RequestGroup
+      researchDefinition: ResearchDefinition
+      researchElementDefinition: ResearchElementDefinition
+      researchStudy: ResearchStudy
+      researchSubject: ResearchSubject
+      riskAssessment: RiskAssessment
+      riskEvidenceSynthesis: RiskEvidenceSynthesis
+      schedule: Schedule
+      searchParameter: SearchParameter
+      serviceRequest: ServiceRequest
+      slot: Slot
+      specimen: Specimen
+      specimenDefinition: SpecimenDefinition
+      structureDefinition: StructureDefinition
+      structureMap: StructureMap
+      subscription: Subscription
+      substance: Substance
+      substanceNucleicAcid: SubstanceNucleicAcid
+      substancePolymer: SubstancePolymer
+      substanceProtein: SubstanceProtein
+      substanceReferenceInformation: SubstanceReferenceInformation
+      substanceSourceMaterial: SubstanceSourceMaterial
+      substanceSpecification: SubstanceSpecification
+      supplyDelivery: SupplyDelivery
+      supplyRequest: SupplyRequest
+      task: Task
+      terminologyCapabilities: TerminologyCapabilities
+      testReport: TestReport
+      testScript: TestScript
+      valueSet: ValueSet
+      verificationResult: VerificationResult
+      visionPrescription: VisionPrescription
+      project: Project
+      clientApplication: ClientApplication
+      user: User
+      login: Login
+      refreshToken: RefreshToken
+      passwordChangeRequest: PasswordChangeRequest
+      jsonWebKey: JsonWebKey
+      bot: Bot
+      accessPolicy: AccessPolicy
+      userConfiguration: UserConfiguration
   base64Binary: string
   boolean: boolean
   canonical: string
@@ -11933,8 +12088,10 @@ types:
       language: optional<code>
       name: optional<string>
       description: optional<string>
+      runtimeVersion: optional<string>
       photo: optional<Attachment>
       code: optional<string>
+      runAsUser: optional<boolean>
   AccessPolicy:
     fields:
       resourceType: optional<string>
@@ -11985,4 +12142,4 @@ types:
       valueString: optional<string>
 services: {}
 
-Done in 2.11s.
+Done in 2.00s.
