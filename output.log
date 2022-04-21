@@ -1,3 +1,6 @@
+yarn run v1.22.18
+$ /Users/dsinghvi/Documents/fern-openapi-plugins/node_modules/.bin/ts-node ./src/app.ts
+Skipping patch endpoint
 errors: {}
 imports: {}
 ids: []
@@ -12150,6 +12153,15 @@ services:
           docs: Search
           response: Bundle
           errors: []
+        createResource:
+          method: POST
+          path: /fhir/R4/{resourceType}
+          parameters:
+            resourceType: string
+          docs: Create Resource
+          response: ResourceList
+          request: ResourceList
+          errors: []
         readResource:
           method: GET
           path: /fhir/R4/{resourceType}/{id}
@@ -12158,6 +12170,24 @@ services:
             id: string
           docs: Read Resource
           response: ResourceList
+          errors: []
+        updateResource:
+          method: PUT
+          path: /fhir/R4/{resourceType}/{id}
+          parameters:
+            resourceType: string
+            id: string
+          docs: Update Resource
+          response: ResourceList
+          request: ResourceList
+          errors: []
+        deleteResource:
+          method: DELETE
+          path: /fhir/R4/{resourceType}/{id}
+          parameters:
+            resourceType: string
+            id: string
+          docs: Delete Resource
           errors: []
         readResourceHistory:
           method: GET
@@ -12178,4 +12208,3 @@ services:
           docs: Read Version
           response: ResourceList
           errors: []
-

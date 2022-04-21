@@ -48,7 +48,8 @@ function convertToFernEndpoint(
     );
     fernHttpEndpoints[fernGetEndpoint.operationId] =
       fernGetEndpoint.convertedEndpoint;
-  } else if (pathItem.post !== undefined) {
+  }
+  if (pathItem.post !== undefined) {
     const fernPostEndpoint = getFernHttpEndpoint(
       pathName,
       pathItem.post,
@@ -58,27 +59,30 @@ function convertToFernEndpoint(
     );
     fernHttpEndpoints[fernPostEndpoint.operationId] =
       fernPostEndpoint.convertedEndpoint;
-  } else if (pathItem.put !== undefined) {
+  }
+  if (pathItem.put !== undefined) {
     const fernPutEndpoint = getFernHttpEndpoint(
       pathName,
       pathItem.put,
-      "POST",
+      "PUT",
       true,
       true
     );
     fernHttpEndpoints[fernPutEndpoint.operationId] =
       fernPutEndpoint.convertedEndpoint;
-  } else if (pathItem.delete !== undefined) {
+  }
+  if (pathItem.delete !== undefined) {
     const fernDeleteEndpoint = getFernHttpEndpoint(
       pathName,
       pathItem.delete,
-      "POST",
+      "DELETE",
       false,
       false
     );
     fernHttpEndpoints[fernDeleteEndpoint.operationId] =
       fernDeleteEndpoint.convertedEndpoint;
-  } else if (pathItem.patch !== undefined) {
+  }
+  if (pathItem.patch !== undefined) {
     console.log("Skipping patch endpoint");
   }
   return fernHttpEndpoints;
@@ -99,21 +103,13 @@ function getFernHttpEndpoint(
   const operationId = getOperationIdOrThrow(httpOperation);
   let response = undefined;
   if (addResponse) {
-    if (httpOperation.responses["200"] === undefined) {
-      throw new Error(
-        "Expected operation to contain 200 response. operationId=" + operationId
-      );
-    }
-    response = convertToFernType(httpOperation.responses["200"]);
+    const openApiResponse = getResponseOrThrow(operationId, httpOperation);
+    response = convertToFernType(openApiResponse);
   }
   let request = undefined;
   if (addRequest) {
-    if (httpOperation.requestBody === undefined) {
-      throw new Error(
-        "Expected operation to contain request body. operationId=" + operationId
-      );
-    }
-    request = convertToFernType(httpOperation.requestBody);
+    const openApiRequest = getRequestOrThrow(operationId, httpOperation);
+    request = convertToFernType(openApiRequest);
   }
   return {
     convertedEndpoint: {
@@ -127,6 +123,33 @@ function getFernHttpEndpoint(
     },
     operationId,
   };
+}
+
+function getResponseOrThrow(
+  operationId: string,
+  httpOperation: OpenAPIV3.OperationObject
+): OpenAPIV3.ReferenceObject | OpenAPIV3.ResponseObject {
+  if ("200" in httpOperation.responses) {
+    return httpOperation.responses["200"];
+  } else if ("201" in httpOperation.responses) {
+    return httpOperation.responses["201"];
+  }
+  throw new Error(
+    "Expected operation to contain 200 or 201 response. operationId=" +
+      operationId
+  );
+}
+
+function getRequestOrThrow(
+  operationId: string,
+  httpOperation: OpenAPIV3.OperationObject
+) {
+  if (httpOperation.requestBody === undefined) {
+    throw new Error(
+      "Expected operation to contain request body. operationId=" + operationId
+    );
+  }
+  return httpOperation.requestBody;
 }
 
 function getOperationIdOrThrow(
