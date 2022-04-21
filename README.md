@@ -1,1 +1,0 @@
-# fern-openapi-plugins
