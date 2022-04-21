@@ -1,14 +1,9 @@
-import { PathItemObject } from "openapi-typescript";
-import { openApi } from "./openapi";
-import {
-  FernSchema,
-  HttpEndpointSchema,
-  TypeDefinitionSchema,
-} from "@fern-api/syntax-analysis/lib/schemas";
+import { FernSchema } from "@fern-api/syntax-analysis/lib/schemas";
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { OpenAPIV3, OpenAPI } from "openapi-types";
 import yaml from "js-yaml";
 import { convertToFernType } from "./converters/typeConverter";
+import { convertToFernService } from "./converters/serviceConverter";
 
 SwaggerParser.parse("openapi.json", (err, api) => {
   if (err) {
@@ -26,6 +21,7 @@ SwaggerParser.parse("openapi.json", (err, api) => {
         types: {},
         services: {},
       };
+      // Convert types
       if (
         api.components !== undefined &&
         api.components.schemas !== undefined
@@ -48,30 +44,14 @@ SwaggerParser.parse("openapi.json", (err, api) => {
           }
         }
       }
-      if (api.paths !== undefined) {
-        for (const path of Object.keys(api.paths)) {
-          const definition = api.paths[path];
-          if (definition !== undefined) {
-            let a = buildFernEndpoint(definition);
-          }
-        }
-      }
+      // Convert endpoints
+      const fernService = convertToFernService(api.paths);
+      fernSchema.services["http"] = {};
+      fernSchema.services["http"]["FhirService"] = fernService;
       console.log(yaml.dump(fernSchema));
     }
   }
 });
-
-function buildFernEndpoint(
-  paths: OpenAPIV3.PathItemObject
-): HttpEndpointSchema {
-  if (paths.get !== undefined) {
-  }
-  return {
-    method: "GET",
-    path: "https://path.com/",
-    errors: [],
-  };
-}
 
 function isSchemaObject(
   typeDefinition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject

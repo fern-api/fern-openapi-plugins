@@ -1,5 +1,3 @@
-yarn run v1.22.18
-$ /Users/dsinghvi/Documents/fern-openapi-plugins/node_modules/.bin/ts-node ./src/app.ts
 errors: {}
 imports: {}
 ids: []
@@ -12140,6 +12138,44 @@ types:
       valueDecimal: optional<double>
       valueInteger: optional<double>
       valueString: optional<string>
-services: {}
+services:
+  http:
+    FhirService:
+      endpoints:
+        search:
+          method: GET
+          path: /fhir/R4/{resourceType}
+          parameters:
+            resourceType: string
+          docs: Search
+          response: Bundle
+          errors: []
+        readResource:
+          method: GET
+          path: /fhir/R4/{resourceType}/{id}
+          parameters:
+            resourceType: string
+            id: string
+          docs: Read Resource
+          response: ResourceList
+          errors: []
+        readResourceHistory:
+          method: GET
+          path: /fhir/R4/{resourceType}/{id}/_history
+          parameters:
+            resourceType: string
+            id: string
+          docs: Read Resource History
+          response: Bundle
+          errors: []
+        readVersion:
+          method: GET
+          path: /fhir/R4/{resourceType}/{id}/_history/{versionId}
+          parameters:
+            resourceType: string
+            id: string
+            versionId: string
+          docs: Read Version
+          response: ResourceList
+          errors: []
 
-Done in 2.00s.

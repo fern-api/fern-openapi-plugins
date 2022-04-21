@@ -202,19 +202,24 @@ function getReferenceObject(
   throw Error("Coerced reference object to schema object");
 }
 
-function isSchemaObject(
+export function isSchemaObject(
   typeDefinition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject
 ): typeDefinition is OpenAPIV3.SchemaObject {
   return (typeDefinition as OpenAPIV3.ReferenceObject).$ref === undefined;
 }
 
-function isReferenceObject(
-  typeDefinition: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject
+export function isReferenceObject(
+  typeDefinition:
+    | OpenAPIV3.SchemaObject
+    | OpenAPIV3.ReferenceObject
+    | OpenAPIV3.ParameterObject
+    | OpenAPIV3.ResponseObject
+    | OpenAPIV3.RequestBodyObject
 ): typeDefinition is OpenAPIV3.ReferenceObject {
   return (typeDefinition as OpenAPIV3.ReferenceObject).$ref !== undefined;
 }
 
-function getTypeNameFromReferenceObject(
+export function getTypeNameFromReferenceObject(
   referenceObject: OpenAPIV3.ReferenceObject
 ): string {
   return referenceObject.$ref.replace("#/components/schemas/", "");
