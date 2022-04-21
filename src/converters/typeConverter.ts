@@ -56,20 +56,25 @@ export function convertToFernType(
         convertNonArraySchemaObjectType(schemaObject.type);
     }
   } else if (schemaObject.properties !== undefined) {
+    let requiredProperties = new Set();
+    if (schemaObject.required !== undefined) {
+      schemaObject.required.forEach((requiredProperty) =>
+        requiredProperties.add(requiredProperty)
+      );
+    }
     let objectTypeDefinition: TypeDefinitionSchema = { fields: {} };
     for (const propertyName of Object.keys(schemaObject.properties)) {
       const propertyType = schemaObject.properties[propertyName];
+      let fernPropertyType: string;
       if (isReferenceObject(propertyType)) {
-        objectTypeDefinition.fields[propertyName] =
-          getTypeNameFromReferenceObject(propertyType);
+        fernPropertyType = getTypeNameFromReferenceObject(propertyType);
       } else {
         const nestedConversionResult = convertToFernTypeNested(
           [typeName],
           propertyName,
           propertyType
         );
-        objectTypeDefinition.fields[propertyName] =
-          nestedConversionResult.convertedTypeName;
+        fernPropertyType = nestedConversionResult.convertedTypeName;
         if (nestedConversionResult.newTypeDefinitions !== undefined) {
           for (const [newTypeName, newTypeDefinition] of Object.entries(
             nestedConversionResult.newTypeDefinitions
@@ -77,6 +82,12 @@ export function convertToFernType(
             conversionResult.typeDefinitions[newTypeName] = newTypeDefinition;
           }
         }
+      }
+      if (requiredProperties.has(propertyName)) {
+        objectTypeDefinition.fields[propertyName] = fernPropertyType;
+      } else {
+        objectTypeDefinition.fields[propertyName] =
+          "optional<" + fernPropertyType + ">";
       }
     }
     conversionResult.typeDefinitions[typeName] = objectTypeDefinition;
