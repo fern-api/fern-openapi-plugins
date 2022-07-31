@@ -4,6 +4,7 @@ import {
     TypeReference,
     PrimitiveType,
     ContainerType,
+    Type,
 } from "@fern-fern/ir-model";
 import { OpenAPIV3 } from "openapi-types";
 
@@ -13,8 +14,6 @@ export function convertToOpenApi(ir: IntermediateRepresentation): OpenAPIV3.Docu
 
 function convertToSchemas(types: TypeDeclaration[]): (OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject)[] {
     const result: (OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject)[] = [];
-
-
     for (const typeDeclaration of types) {
         if (typeDeclaration.shape._type === "object") {
             const properties: Record<string, OpenAPIV3.SchemaObject> = {};
@@ -37,9 +36,9 @@ function convertToSchemas(types: TypeDeclaration[]): (OpenAPIV3.SchemaObject | O
                 required: requiredKeys,
                 allOf: typeDeclaration.shape.extends.map((declaredTypeName) => {
                     return {
-                        "$ref": `#/components/schemas/${declaredTypeName.name}`
-                    }
-                })
+                        $ref: `#/components/schemas/${declaredTypeName.name}`,
+                    };
+                }),
             };
             result.push(schemaObject);
         } else if (typeDeclaration.shape._type === "alias") {
@@ -57,15 +56,54 @@ function convertToSchemas(types: TypeDeclaration[]): (OpenAPIV3.SchemaObject | O
             };
             result.push(enumSchemaObject);
         } else if (typeDeclaration.shape._type === "union") {
-            const 
             const unionSchemaObject: OpenAPIV3.SchemaObject = {
-                oneOf: typeDeclaration.shape.types.map((singleUnionType) => {
-                    if (singleUnionType.valueType.)
-                })
-            }
+                ...convertUnion(typeDeclaration.shape),
+                description: typeDeclaration.docs ?? undefined,
+            };
+            result.push(unionSchemaObject);
         }
     }
     return result;
+}
+
+function convertUnion(union: Type.Union): OpenAPIV3.SchemaObject {
+    const oneOfTypes: OpenAPIV3.SchemaObject[] = union.types.map((singleUnionType) => {
+        const valueType = singleUnionType.valueType;
+        const convertedValueType = convertTypeReference(valueType);
+        if (valueType._type === "named") {
+            let properties = {};
+            properties[union.discriminant] = {
+                type: "string",
+                enum: [singleUnionType.discriminantValue],
+            };
+            return {
+                type: "object",
+                allOf: [
+                    {
+                        $ref: `#/components/schemas/${valueType.name}`,
+                    },
+                    {
+                        type: "object",
+                        properties,
+                    },
+                ],
+            };
+        } else {
+            let properties = {};
+            properties[union.discriminant] = {
+                type: "string",
+                enum: [singleUnionType.discriminantValue],
+            };
+            properties[union.discriminant] = convertedValueType;
+            return {
+                type: "object",
+                properties,
+            };
+        }
+    });
+    return {
+        oneOf: oneOfTypes,
+    };
 }
 
 type OpenApiTypeConversionResult = OpenApiSchemaObjectResult | OpenApiReferenceObjectResult;
